@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+
+{% block branding %}
+  <h1 id="site-name">
+    <a href="{% url 'admin:index' %}">Ulcer Tumor Detection Admin</a>
+  </h1>
+  <div style="margin-top:8px;font-size:13px;">
+    <a href="{% url 'login' %}">&larr; Back to General Portal</a>
+  </div>
+{% endblock %}
+

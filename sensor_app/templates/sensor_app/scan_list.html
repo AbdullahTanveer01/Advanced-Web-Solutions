@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scan Records</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f7fb; }
+    h1 { margin-top: 0; }
+    a { color: #2563eb; text-decoration: none; }
+    .top-links { margin-bottom: 15px; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+    th { text-align: left; color: #777; background: #f1f5f9; }
+    .pill { padding: 4px 10px; border-radius: 999px; font-size: 12px; }
+    .pill-positive { background:#fee2e2; color:#dc2626; }
+    .pill-normal { background:#dcfce7; color:#16a34a; }
+  </style>
+</head>
+<body>
+  <div class="top-links">
+    <a href="{% url 'dashboard' %}">&larr; Back to dashboard</a> |
+    <a href="{% url 'scan_create' %}">New scan</a>
+  </div>
+
+  <h1>Scan Records</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Scan ID</th>
+        <th>Patient</th>
+        <th>Status</th>
+        <th>Peak pressure</th>
+        <th>Contact area</th>
+        <th>Time</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for frame in frames %}
+      <tr>
+        <td>FR-{{ frame.id }}</td>
+        <td>{{ frame.user.username }}</td>
+        <td>
+          {% if frame.alert_flag %}
+            <span class="pill pill-positive">Positive</span>
+          {% else %}
+            <span class="pill pill-normal">Normal</span>
+          {% endif %}
+        </td>
+        <td>{{ frame.peak_pressure }}</td>
+        <td>{{ frame.contact_area }}</td>
+        <td>{{ frame.timestamp }}</td>
+        <td><a href="{% url 'scan_detail' frame.id %}">View</a></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">No scans yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
+

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New Scan</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background:#f5f7fb; }
+    h1 { margin-top: 0; }
+    a { color:#2563eb; text-decoration:none; }
+    form { max-width:400px; background:white; padding:20px; border-radius:10px; }
+    label { display:block; margin-top:10px; font-weight:bold; }
+    input[type="number"] { width:100%; padding:8px; margin-top:4px; border-radius:6px; border:1px solid #ccc; }
+    button { margin-top:15px; padding:10px 16px; border:none; border-radius:8px; background:#2563eb; color:white; cursor:pointer; }
+    button:hover { background:#1d4ed8; }
+    .error { color:#b91c1c; margin-top:10px; }
+  </style>
+</head>
+<body>
+  <p><a href="{% url 'scan_list' %}">&larr; Back to scans</a></p>
+  <h1>Record New Scan</h1>
+  <form method="post">
+    {% csrf_token %}
+    <label for="peak_pressure">Peak pressure</label>
+    <input type="number" name="peak_pressure" id="peak_pressure" required min="0">
+
+    <label for="contact_area">Contact area (cm²)</label>
+    <input type="number" name="contact_area" id="contact_area" step="0.1" min="0">
+
+    <label>
+      <input type="checkbox" name="alert_flag">
+      Flag as positive / alert
+    </label>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <button type="submit">Save scan</button>
+  </form>
+</body>
+</html>
+

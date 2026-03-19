@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ulcer Tumor Detection Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+  * {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  body {
+    margin: 0;
+    background: #f5f7fb;
+  }
+  .app {
+    display: flex;
+    min-height: 100vh;
+  }
+  .sidebar {
+    width: 230px;
+    background: #ffffff;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+  }
+  .logo {
+    color: #2563eb;
+    margin-bottom: 30px;
+  }
+  .sidebar a {
+    display: block;
+    padding: 12px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 6px;
+  }
+  .sidebar a.active,
+  .sidebar a:hover {
+    background: #e0ecff;
+    color: #2563eb;
+  }
+  .logout-link {
+    margin-top: 40px;
+  }
+  main {
+    flex: 1;
+    padding: 25px;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .topbar input {
+    width: 300px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+  }
+  .card h3 {
+    margin: 0;
+    font-size: 28px;
+  }
+  .cards p {
+    margin-top: 6px;
+    color: #666;
+  }
+  .charts {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .chart-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+  }
+  .large {
+    height: 320px;
+  }
+  .full {
+    margin-top: 20px;
+  }
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  .table-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+  }
+  th {
+    text-align: left;
+    color: #777;
+  }
+  a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+  .positive {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+  .negative {
+    background: #dcfce7;
+    color: #16a34a;
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+  .mild {
+    background: #fef3c7;
+    color: #ca8a04;
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+  .moderate {
+    background: #ffedd5;
+    color: #ea580c;
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+  .pill-role {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    background:#e0ecff;
+    color:#1d4ed8;
+    margin-left:8px;
+  }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <h2 class="logo">Ulcer Tumor Detection</h2>
+    <nav>
+      <a class="active">Dashboard</a>
+      <a>Scan Records</a>
+      <a>Patients</a>
+      <a>Analytics</a>
+      <a>Settings</a>
+      <a href="{% url 'admin:index' %}" class="logout-link">Go to Admin</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <input type="text" placeholder="Search scans, patients..." />
+      <div class="profile">
+        <span>{{ request.user.username }}</span>
+        {% if role %}
+          <span class="pill-role">{{ role|title }}</span>
+        {% endif %}
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card">
+        <h3>{{ total_scans }}</h3>
+        <p>Total Scans</p>
+      </div>
+      <div class="card">
+        <h3>{{ positive_cases }}</h3>
+        <p>Positive Cases</p>
+      </div>
+      <div class="card">
+        <h3>{{ normal_results }}</h3>
+        <p>Normal Results</p>
+      </div>
+      <div class="card">
+        <h3>1.8m</h3>
+        <p>Avg Processing Time</p>
+      </div>
+    </section>
+
+    {% if role == "clinician" or request.user.is_superuser %}
+      <section class="charts">
+        <div class="chart-box large">
+          <h4>Detection Trends</h4>
+          <canvas id="lineChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <h4>Severity Distribution</h4>
+          <canvas id="pieChart"></canvas>
+        </div>
+      </section>
+
+      <section class="chart-box full">
+        <div class="chart-header">
+          <h4>Monthly Analysis</h4>
+          <select>
+            <option>Last 6 months</option>
+            <option>Last Year</option>
+          </select>
+        </div>
+        <canvas id="barChart"></canvas>
+      </section>
+
+      <section class="table-box">
+        <h4>Recent Scans</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Scan ID</th>
+              <th>Patient</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Severity</th>
+              <th>Date &amp; Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for frame in frames %}
+            <tr>
+              <td>FR-{{ frame.id }}</td>
+              <td>{{ frame.user.username }}</td>
+              <td>Pressure Map</td>
+              <td>
+                {% if frame.alert_flag %}
+                  <span class="positive">Positive</span>
+                {% else %}
+                  <span class="negative">Normal</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if frame.alert_flag %}
+                  <span class="moderate">Elevated</span>
+                {% else %}
+                  <span class="mild">Stable</span>
+                {% endif %}
+              </td>
+              <td>{{ frame.timestamp }}</td>
+              <td><a href="{% url 'scan_detail' frame.id %}">View Details</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7">No scans recorded yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    {% else %}
+      <section class="table-box">
+        <h4>Your care overview</h4>
+        <p>
+          As a patient you can review your latest pressure scans and the recommendations your care team has made.
+          This section will later be populated with real data from the database.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Summary</th>
+              <th>Clinician</th>
+              <th>Next step</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2026-03-01</td>
+              <td>Routine foot pressure check – no areas of concern detected.</td>
+              <td>Dr. Example</td>
+              <td>Continue daily inspection, follow up in 3 months.</td>
+            </tr>
+            <tr>
+              <td>2026-02-10</td>
+              <td>Mild pressure increase around left heel, monitoring recommended.</td>
+              <td>Dr. Example</td>
+              <td>Use off-loading insole and schedule follow-up scan.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    {% endif %}
+  </main>
+</div>
+
+<script>
+// Line Chart
+new Chart(document.getElementById('lineChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+    datasets: [
+      {
+        label: 'Ulcers',
+        data: [45,52,48,60,55,65],
+        borderColor: '#3b82f6'
+      },
+      {
+        label: 'Tumors',
+        data: [30,35,32,42,38,45],
+        borderColor: '#ef4444'
+      },
+      {
+        label: 'Normal',
+        data: [125,143,150,160,170,185],
+        borderColor: '#10b981'
+      }
+    ]
+  }
+});
+
+// Pie Chart
+new Chart(document.getElementById('pieChart'), {
+  type: 'pie',
+  data: {
+    labels: ['Mild','Moderate','Severe'],
+    datasets: [{
+      data: [156,89,34],
+      backgroundColor: ['#10b981','#f59e0b','#ef4444']
+    }]
+  }
+});
+
+// Bar Chart
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+    datasets: [
+      {
+        label: 'Ulcers',
+        data: [45,52,48,60,55,65],
+        backgroundColor: '#3b82f6'
+      },
+      {
+        label: 'Tumors',
+        data: [30,35,32,42,38,45],
+        backgroundColor: '#ef4444'
+      },
+      {
+        label: 'Normal',
+        data: [125,143,150,160,170,185],
+        backgroundColor: '#10b981'
+      }
+    ]
+  }
+});
+</script>
+</body>
+</html>
+
