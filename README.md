@@ -1,3 +1,10 @@
+# 🚀 Advanced Web Solutions
+
+## 📌 Overview
+This project is a Django-based web application designed for data analytics, reporting, and pressure monitoring. It follows the MVT architecture and integrates multiple modules for authentication, analytics, and reporting.
+
+---
+
 # Graphene Trace - MedTech Pressure Monitoring Platform
 
 Production-oriented Django + MySQL web app for ingesting 32x32 pressure mat data, computing ulcer-risk metrics, and presenting clinician/patient dashboards.
