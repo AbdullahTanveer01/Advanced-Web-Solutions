@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ulcer Tumor Detection - Login</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f7f9fc;
+}
+
+/* Layout */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* LEFT SIDE */
+.left-panel {
+  width: 50%;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 360px;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Inputs */
+label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.options a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 12px;
+  background: #2563eb;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+/* Signup */
+.signup {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signup a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+/* Social */
+.social {
+  margin-top: 25px;
+  display: flex;
+  gap: 10px;
+}
+
+.social button {
+  background: white;
+  color: black;
+  border: 1px solid #ccc;
+}
+
+/* RIGHT SIDE */
+.right-panel {
+  width: 50%;
+  background: linear-gradient(180deg,#2563eb,#1e40af);
+  color: white;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.right-panel h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.feature {
+  margin-bottom: 20px;
+}
+
+.feature strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.quote {
+  background: rgba(255,255,255,0.15);
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 40px;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+  .left-panel, .right-panel {
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="login-box">
+
+      <div class="logo">💙 Ulcer Tumor Detection</div>
+
+      <h1>Welcome Back</h1>
+      <p class="subtitle">Sign in to access your medical records dashboard</p>
+
+      <form>
+        <label>Email Address</label>
+        <input type="email" placeholder="doctor@hospital.com">
+
+        <label>Password</label>
+        <input type="password" placeholder="********">
+
+        <div class="options">
+          <div>
+            <input type="checkbox"> Remember me
+          </div>
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button type="submit">Sign In</button>
+      </form>
+
+      <div class="signup">
+        Don’t have an account? <a href="#">Sign Up</a>
+      </div>
+
+      <div class="social">
+        <button>Google</button>
+        <button>GitHub</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <h2>Advanced Medical Diagnostics</h2>
+
+    <div class="feature">
+      <strong>AI-Powered Analysis</strong>
+      Get accurate detection results using state-of-the-art machine learning algorithms.
+    </div>
+
+    <div class="feature">
+      <strong>HIPAA Compliant</strong>
+      Your patient data is secure with enterprise-grade encryption.
+    </div>
+
+    <div class="feature">
+      <strong>Real-time Results</strong>
+      Receive comprehensive diagnostic reports in minutes, not hours.
+    </div>
+
+    <div class="quote">
+      "This platform has revolutionized our diagnostic workflow. The accuracy and speed are unmatched."  
+      <br><br>
+      — Dr. Sarah Johnson, Chief Radiologist
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
